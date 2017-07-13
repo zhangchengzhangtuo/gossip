@@ -1,9 +1,5 @@
-package com.gaolaozhuang.netty;
+package com.gaolaozhuang.netty.model;
 
-import com.gaolaozhuang.redis.Redis;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
-
-import static com.gaolaozhuang.utils.Constants.*;
 /**
  * 这个实体并不是网络传输的实体，他其实是网络传输实体进来之后的通用体，不仅仅包括内容，还包括一些状态字段。
  */
@@ -11,16 +7,20 @@ public class NettyTransporter {
 
     private byte sign;
 
-    private byte status;
+    private byte type;
 
     private long invokeId;
 
     private CommonBody commonBody;
 
 
-    public NettyTransporter(byte sign,byte status,long invokeId,CommonBody commonBody){
+    public NettyTransporter(){
+
+    }
+
+    public NettyTransporter(byte sign,byte type,long invokeId,CommonBody commonBody){
         this.sign=sign;
-        this.status=status;
+        this.type=type;
         this.invokeId=invokeId;
         this.commonBody=commonBody;
     }
@@ -32,14 +32,6 @@ public class NettyTransporter {
 
     public void setSign(byte sign) {
         this.sign = sign;
-    }
-
-    public byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(byte status) {
-        this.status = status;
     }
 
     public long getInvokeId() {
@@ -56,5 +48,13 @@ public class NettyTransporter {
 
     public void setCommonBody(CommonBody commonBody) {
         this.commonBody = commonBody;
+    }
+
+    public byte getType() {
+        return type;
+    }
+
+    public void setType(byte type) {
+        this.type = type;
     }
 }

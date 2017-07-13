@@ -1,5 +1,6 @@
 package com.gaolaozhuang.processor;
 
+import com.gaolaozhuang.netty.model.CommonBody;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.ThreadFactory;
@@ -11,7 +12,7 @@ public class Processor {
 
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
-    public void process(Object object){
+    public void process(CommonBody object){
         try{
             Task task=new Task(object);
             threadPoolTaskExecutor.execute(task);
@@ -20,14 +21,14 @@ public class Processor {
         }
     }
 
-    protected void handle(Object object){
+    protected void handle(CommonBody commonBody){
 
     }
 
     class Task implements Runnable{
-        private Object object;
+        private CommonBody object;
 
-        public Task(Object object){
+        public Task(CommonBody object){
             this.object=object;
         }
 

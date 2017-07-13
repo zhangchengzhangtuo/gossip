@@ -1,12 +1,10 @@
 package com.gaolaozhuang.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
 
 /**
  * Created by zhangcheng on 2017/7/11.
@@ -19,7 +17,7 @@ public class NettyServer {
 
     private EventLoopGroup workerGroup;
 
-    private  NettyServerConfig nettyServerConfig;
+    private NettyServerConfig nettyServerConfig;
 
     public NettyServer(NettyServerConfig nettyServerConfig){
         this.nettyServerConfig=nettyServerConfig;
