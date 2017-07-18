@@ -4,10 +4,8 @@ import com.gaolaozhuang.netty.model.*;
 import com.gaolaozhuang.processor.*;
 import com.gaolaozhuang.utils.PropertiesUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.gaolaozhuang.utils.Constants.*;
 
@@ -19,7 +17,7 @@ public class Init {
 
     private Node currentNode;
 
-    private static List<Master> masterList=new ArrayList<>();
+    private static final Map<Node,NodeStatus> NodeStatusMap=new ConcurrentHashMap<Node,NodeStatus>();
 
     private final static Map<Byte,Processor> processorMap=new HashMap<>();
 
@@ -47,13 +45,7 @@ public class Init {
     }
 
     private void initMasterList(){
-        String masters=PropertiesUtil.getProperty("masters");
-        String [] ids=masters.split(",");
-        for(String idStr:ids){
-            int id=Integer.parseInt(idStr);
-            Master master=new Master(id);
-            masterList.add(master);
-        }
+
     }
 
     private void intMap(){
@@ -77,6 +69,9 @@ public class Init {
     }
 
 
+    enum NodeStatus{
+
+    }
 
 
 }

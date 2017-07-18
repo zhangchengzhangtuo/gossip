@@ -1,6 +1,6 @@
 package com.gaolaozhuang.netty.model;
 
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import java.util.Date;
 
 /**
  * Created by zhangcheng on 17/7/13.
@@ -10,6 +10,8 @@ public class Swotch implements CommonBody{
     private Node dst;
 
     private int masterId;
+
+    private Date updateTime;
 
     private boolean isDown;
 
