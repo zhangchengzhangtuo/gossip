@@ -2,8 +2,7 @@ package com.gaolaozhuang;
 
 import com.gaolaozhuang.netty.model.Node;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -11,19 +10,26 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class Master {
 
-    private static List<Node> nodeList=new ArrayList<>();
+    private static Map<Node,MonitorState> map=new HashMap<>();
 
     private int id;
-
-    private AtomicInteger agreementNumber;
 
     private AtomicInteger status;
 
     public Master(int id){
         this.id=id;
-        this.agreementNumber=new AtomicInteger(0);
         this.status=new AtomicInteger(0);
     }
 
+    class MonitorState{
+
+        private int monitorStatus;
+
+        private Date updateTime;
+    }
+
+    enum Status{
+
+    }
 
 }

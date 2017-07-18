@@ -1,5 +1,7 @@
 package com.gaolaozhuang.netty;
 
+import com.gaolaozhuang.netty.code.Decoder;
+import com.gaolaozhuang.netty.code.Encoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -51,7 +53,8 @@ public class NettyServer {
         serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
-                ch.pipeline().addLast();
+                ch.pipeline().addLast(new Decoder());
+                ch.pipeline().addLast(new Encoder());
             }
         });
         serverBootstrap.bind(nettyServerConfig.getListenPort()).syncUninterruptibly();

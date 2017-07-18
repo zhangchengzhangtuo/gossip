@@ -1,10 +1,15 @@
 package com.gaolaozhuang;
 
-import com.gaolaozhuang.netty.model.Node;
+import com.gaolaozhuang.netty.model.*;
+import com.gaolaozhuang.processor.*;
 import com.gaolaozhuang.utils.PropertiesUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.gaolaozhuang.utils.Constants.*;
 
 
 /**
@@ -15,6 +20,19 @@ public class Init {
     private Node currentNode;
 
     private static List<Master> masterList=new ArrayList<>();
+
+    private final static Map<Byte,Processor> processorMap=new HashMap<>();
+
+    private final static Map<Byte,Class<?>>  commonBodyClazzMap=new HashMap<>();
+
+    private PingProcessor pingProcessor;
+
+    private PongProcessor pongProcessor;
+
+    private SwitchProcessor switchProcessor;
+
+    private SwotchProcessor swotchProcessor;
+
 
     public void init(){
 
@@ -36,6 +54,26 @@ public class Init {
             Master master=new Master(id);
             masterList.add(master);
         }
+    }
+
+    private void intMap(){
+        commonBodyClazzMap.put(Type.PING,Ping.class);
+        commonBodyClazzMap.put(Type.PONG,Pong.class);
+        commonBodyClazzMap.put(Type.SWITCH, Switch.class);
+        commonBodyClazzMap.put(Type.SWOTCH,Swotch.class);
+
+        processorMap.put(Type.PING,pingProcessor);
+        processorMap.put(Type.PONG,pongProcessor);
+        processorMap.put(Type.SWITCH,switchProcessor);
+        processorMap.put(Type.SWOTCH,swotchProcessor);
+    }
+
+    public static Processor getProcessor(byte type){
+        return processorMap.get(type);
+    }
+
+    public static Class<?> getCommonBodyClass(byte type){
+        return commonBodyClazzMap.get(type);
     }
 
 

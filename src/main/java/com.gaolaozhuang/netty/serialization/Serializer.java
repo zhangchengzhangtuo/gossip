@@ -7,5 +7,5 @@ public interface Serializer {
 
     public <T> byte [] writeObject(T obj);
 
-    public <T> T readObject(byte[] bytes,Class<T> Clazz);
+    public <T> T readObject(byte[] bytes,Class<T> clazz);
 }
