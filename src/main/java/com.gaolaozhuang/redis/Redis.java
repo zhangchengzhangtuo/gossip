@@ -18,5 +18,14 @@ public class Redis {
         });
     }
 
+    public String get(final String key){
+        return (String)redisExecuteTemplate.excute(new RedisExecuteTemplate.ExecuteCallback() {
+            @Override
+            public Object command(Jedis jedis) {
+                return jedis.get(key);
+            }
+        });
+    }
+
 
 }

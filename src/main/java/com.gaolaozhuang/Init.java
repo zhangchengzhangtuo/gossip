@@ -112,6 +112,9 @@ public class Init {
         masterMap.put(masterId,master);
     }
 
+    public static Set<Integer> getMasterIdSet(){
+        return masterMap.keySet();
+    }
 
     public static Set<Node> getNodeSet(){
         return nodeStatusMap.keySet();

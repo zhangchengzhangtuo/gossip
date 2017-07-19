@@ -1,6 +1,7 @@
 package com.gaolaozhuang.timer;
 
 import com.gaolaozhuang.Init;
+import com.gaolaozhuang.monitor.resources.Master;
 import com.gaolaozhuang.netty.client.NettyClient;
 import com.gaolaozhuang.netty.model.Node;
 import com.gaolaozhuang.netty.model.Ping;
@@ -20,7 +21,13 @@ public class PingTask {
         for(Node node:nodeSet){
             Channel channel=nettyClient.getChannel(node);
             if(channel==null||!channel.isActive()){
-                
+                Init.setNodeStatus(node, Init.NodeStatus.FAIL);
+                for(Integer masterId:Init.getMasterIdSet()){
+                    Master master=Init.getMasterById(masterId);
+                    if(master.containNode(node)){
+                        master.removeNode(node);
+                    }
+                }
             }
             Ping ping=new Ping();
             ping.setSource(Init.getCurrentNode());

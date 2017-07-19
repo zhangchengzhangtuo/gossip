@@ -68,5 +68,12 @@ public class Master {
         this.status.compareAndSet(preMasterStatus,currentStatus);
     }
 
+    public boolean containNode(Node node){
+        return masterStatusNodeMap.containsKey(node);
+    }
+
+    public String getMasterName(){
+        return this.masterName;
+    }
 
 }
