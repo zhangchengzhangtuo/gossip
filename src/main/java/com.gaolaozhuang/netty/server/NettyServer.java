@@ -1,4 +1,4 @@
-package com.gaolaozhuang.netty;
+package com.gaolaozhuang.netty.server;
 
 import com.gaolaozhuang.netty.code.Decoder;
 import com.gaolaozhuang.netty.code.Encoder;
@@ -55,6 +55,7 @@ public class NettyServer {
             protected void initChannel(SocketChannel ch) throws Exception {
                 ch.pipeline().addLast(new Decoder());
                 ch.pipeline().addLast(new Encoder());
+                ch.pipeline().addLast(new ServerHandler());
             }
         });
         serverBootstrap.bind(nettyServerConfig.getListenPort()).syncUninterruptibly();

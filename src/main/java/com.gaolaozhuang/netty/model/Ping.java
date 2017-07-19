@@ -7,8 +7,6 @@ public class Ping implements CommonBody {
 
     private Node source;
 
-    private int status;
-
     public Node getSource() {
         return source;
     }
@@ -17,11 +15,4 @@ public class Ping implements CommonBody {
         this.source = source;
     }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
 }

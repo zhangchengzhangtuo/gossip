@@ -44,4 +44,31 @@ public class Node {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public int hashCode(){
+        return ip.hashCode()*6+new Integer(port).hashCode()*8;
+    }
+
+    @Override
+    public boolean equals(Object otherObject){
+        if(this==otherObject){
+            return true;
+        }
+
+        if(otherObject==null){
+            return false;
+        }
+
+        if(getClass()!=otherObject.getClass()){
+            return false;
+        }
+
+        Node other=(Node)otherObject;
+        if((other.getIp().equals(this.ip))&&(other.getPort()==port)){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

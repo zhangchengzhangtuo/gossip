@@ -1,4 +1,4 @@
-package com.gaolaozhuang.netty;
+package com.gaolaozhuang.netty.server;
 
 /**
  * Created by zhangcheng on 2017/7/11.
