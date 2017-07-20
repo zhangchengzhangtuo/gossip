@@ -24,6 +24,8 @@ public class NettyServer {
 
     private NettyServerConfig nettyServerConfig;
 
+    private ChannelFuture serverChannelFuture;
+
     public NettyServer(NettyServerConfig nettyServerConfig){
         this.nettyServerConfig=nettyServerConfig;
         this.serverBootstrap=new ServerBootstrap();
@@ -69,11 +71,19 @@ public class NettyServer {
                 ch.pipeline().addLast(serverHandler);
             }
         });
-        serverBootstrap.bind(nettyServerConfig.getListenPort()).syncUninterruptibly();
+
+        serverChannelFuture=serverBootstrap.bind(nettyServerConfig.getListenPort()).syncUninterruptibly();
+
+        serverChannelFuture.channel().closeFuture().syncUninterruptibly();
     }
 
 
     public void shutdown(){
+
+        if(serverChannelFuture!=null){
+            serverChannelFuture.channel().close();
+        }
+
         if(bossGroup!=null){
             bossGroup.shutdownGracefully();
         }

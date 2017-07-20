@@ -8,5 +8,6 @@ netty handler的执行顺序
 netty 序列化
 netty client的使用技巧
 equals和hashcode方法重写
+netty阻塞不是字啊bind方法处的嘛，为什么这个地方是close的方法。
 
 
