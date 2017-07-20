@@ -3,19 +3,22 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context-4.0.xsd
        http://www.springframework.org/schema/tx
-       http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+       http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+       http://www.springframework.org/schema/task
+       http://www.springframework.org/schema/task/spring-task.xsd">
 
 
     <bean id="propertyConfigurer"  class="com.gaolaozhuang.utils.PropertiesUtil">
         <property name="locations">
             <list>
-                <value>classpath*:sys.properties</value>
+                <value>classpath:sys.properties</value>
             </list>
         </property>
         <property name="ignoreResourceNotFound" value="true"/>
@@ -77,20 +80,55 @@
         <property name="redisExecuteTemplate" ref="redisExecuteTemplate"></property>
     </bean>
 
-    <bean id="init" class="com.gaolaozhuang.Init">
+    <bean id="nettyServerConfig" class="com.gaolaozhuang.netty.server.NettyServerConfig">
+        <property name="listenPort" value="${node.port}"></property>
+        <property name="workerNum" value="${server.workNum}"></property>
+        <property name="writeBufferLowWaterMark" value="${server.writeBufferLowWaterMark}"></property>
+        <property name="writeBufferHighWaterMark" value="${server.writeBufferHighWaterMark}"></property>
+    </bean>
+
+    <bean id="nettyServer" class="com.gaolaozhuang.netty.server.NettyServer" init-method="init">
+        <constructor-arg ref="nettyServerConfig"></constructor-arg>
+    </bean>
+
+    <bean id="nettyClientConfig" class="com.gaolaozhuang.netty.client.NettyClientConfig">
+        <property name="workerNumber" value="${client.workNum}"></property>
+        <property name="createChannelTimeout" value="${client.createChannelTimeout}"></property>
+        <property name="writeBufferLowWaterMark" value="${client.writeBufferLowWaterMark}"></property>
+        <property name="writeBufferHighWaterMark" value="${client.writeBufferHighWaterMark}"></property>
+    </bean>
+
+    <bean id="nettyClient" class="com.gaolaozhuang.netty.client.NettyClient" init-method="init" destroy-method="shutdown">
+        <constructor-arg ref="nettyClientConfig"></constructor-arg>
+    </bean>
+
+    <bean id="monitorResourceTask" class="com.gaolaozhuang.timer.MonitorResourceTask">
+        <property name="redis" ref="redis"></property>
+        <property name="nettyClient" ref="nettyClient"></property>
+    </bean>
+
+    <bean id="pingTask" class="com.gaolaozhuang.timer.PingTask">
+        <property name="nettyClient" ref="nettyClient"></property>
+    </bean>
+
+    <bean id="publishTask" class="com.gaolaozhuang.timer.PublishTask">
+        <property name="redis" ref="redis"></property>
+    </bean>
+
+    <bean id="init" class="com.gaolaozhuang.Init" init-method="init" destroy-method="clear">
         <property name="pingProcessor" ref="pingProcessor"></property>
         <property name="pongProcessor" ref="pongProcessor"></property>
         <property name="switchProcessor" ref="switchProcessor"></property>
         <property name="swotchProcessor" ref="swotchProcessor"></property>
         <property name="monitorMasterList" ref="monitorMasterList"></property>
         <property name="subscriber" ref="subscriber"></property>
+        <property name="nettyServer" ref="nettyServer"></property>
     </bean>
 
-    <bean id="" class="">
-
-    </bean>
-
-
-
+    <task:scheduled-tasks>
+        <task:scheduled ref="monitorResourceTask" method="monitorResource" cron="0/2 * * * * ?"/>
+        <task:scheduled ref="pingTask" method="ping" cron="0/1 * * * * ?"/>
+        <task:scheduled ref="publishTask" method="publish" cron="0/5 * * * * ?"/>
+    </task:scheduled-tasks>
 
 </beans>

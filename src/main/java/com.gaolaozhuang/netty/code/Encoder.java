@@ -43,4 +43,8 @@ public class Encoder extends MessageToByteEncoder<NettyTransporter> {
         out.writeInt(body.length);
         out.writeBytes(body);
     }
+
+    public void setSerializer(Serializer serializer) {
+        this.serializer = serializer;
+    }
 }

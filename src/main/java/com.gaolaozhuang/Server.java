@@ -56,7 +56,8 @@ public class Server {
     }
 
     public static void start() throws Throwable{
-
+        Init init= (Init) applicationContext.getBean("init");
+        init.start();
     }
 
 

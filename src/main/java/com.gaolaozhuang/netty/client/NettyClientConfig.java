@@ -30,6 +30,10 @@ public class NettyClientConfig {
     }
 
     public int getWorkerNumber() {
+        int processors=Runtime.getRuntime().availableProcessors();
+        if(workerNumber>processors){
+            return processors;
+        }
         return workerNumber;
     }
 

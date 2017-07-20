@@ -1,7 +1,10 @@
 package com.gaolaozhuang.netty.server;
 
+import com.gaolaozhuang.Server;
 import com.gaolaozhuang.netty.code.Decoder;
 import com.gaolaozhuang.netty.code.Encoder;
+import com.gaolaozhuang.netty.serialization.FastjsonSerializer;
+import com.gaolaozhuang.netty.serialization.Serializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -50,12 +53,20 @@ public class NettyServer {
             //log
             return;
         }
+
+        Serializer serializer=new FastjsonSerializer();
+        final Decoder decoder=new Decoder();
+        decoder.setSerializer(serializer);
+        final Encoder encoder=new Encoder();
+        encoder.setSerializer(serializer);
+        final ServerHandler serverHandler=new ServerHandler();
+
         serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
-                ch.pipeline().addLast(new Decoder());
-                ch.pipeline().addLast(new Encoder());
-                ch.pipeline().addLast(new ServerHandler());
+                ch.pipeline().addLast(decoder);
+                ch.pipeline().addLast(encoder);
+                ch.pipeline().addLast(serverHandler);
             }
         });
         serverBootstrap.bind(nettyServerConfig.getListenPort()).syncUninterruptibly();

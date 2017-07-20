@@ -82,4 +82,8 @@ public class Decoder extends ReplayingDecoder<State> {
             throw new DecoderException("magic vlaue "+magic+" is not equal "+Protocol.MAGIC);
         }
     }
+
+    public void setSerializer(Serializer serializer) {
+        this.serializer = serializer;
+    }
 }

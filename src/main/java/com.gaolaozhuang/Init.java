@@ -3,6 +3,7 @@ package com.gaolaozhuang;
 import com.gaolaozhuang.monitor.resources.Master;
 import com.gaolaozhuang.monitor.resources.MonitorState;
 import com.gaolaozhuang.netty.model.*;
+import com.gaolaozhuang.netty.server.NettyServer;
 import com.gaolaozhuang.processor.*;
 import com.gaolaozhuang.redis.Subscriber;
 import com.gaolaozhuang.utils.PropertiesUtil;
@@ -41,12 +42,20 @@ public class Init {
 
     private Subscriber subscriber;
 
+    private NettyServer nettyServer;
+
 
     public void init() throws Exception{
         initCurrentNode();
         initMasterList();
         initMap();
-        initSubscriber();
+    }
+
+    public void start() throws Exception{
+        subscriber.setName("subscribe_thread");
+        subscriber.setDaemon(true);
+        subscriber.start();
+        nettyServer.start();
     }
 
     private void initCurrentNode() throws Exception{
@@ -84,11 +93,6 @@ public class Init {
         processorMap.put(Type.SWOTCH,swotchProcessor);
     }
 
-    private void initSubscriber(){
-        subscriber.setName("subscribe_thread");
-        subscriber.setDaemon(true);
-        subscriber.start();
-    }
 
     public static Node getCurrentNode(){
         return currentNode;
@@ -122,6 +126,10 @@ public class Init {
         }
         if(swotchProcessor!=null){
             swotchProcessor.close();
+        }
+
+        if(nettyServer!=null){
+            nettyServer.shutdown();
         }
     }
 
@@ -171,6 +179,14 @@ public class Init {
 
     public void setSubscriber(Subscriber subscriber) {
         this.subscriber = subscriber;
+    }
+
+    public NettyServer getNettyServer() {
+        return nettyServer;
+    }
+
+    public void setNettyServer(NettyServer nettyServer) {
+        this.nettyServer = nettyServer;
     }
 
 

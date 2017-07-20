@@ -7,4 +7,6 @@ netty编解码的实现技巧
 netty handler的执行顺序
 netty 序列化
 netty client的使用技巧
+equals和hashcode方法重写
+
 

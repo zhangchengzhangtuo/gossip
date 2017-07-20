@@ -3,6 +3,8 @@ package com.gaolaozhuang.netty.client;
 import com.gaolaozhuang.netty.code.Decoder;
 import com.gaolaozhuang.netty.code.Encoder;
 import com.gaolaozhuang.netty.model.Node;
+import com.gaolaozhuang.netty.serialization.FastjsonSerializer;
+import com.gaolaozhuang.netty.serialization.Serializer;
 import com.gaolaozhuang.utils.PropertiesUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -54,12 +56,19 @@ public class NettyClient {
             bootstrap.option(ChannelOption.WRITE_BUFFER_WATER_MARK,writeBufferWaterMark);
         }
 
+        Serializer serializer=new FastjsonSerializer();
+        final Decoder decoder=new Decoder();
+        decoder.setSerializer(serializer);
+        final Encoder encoder=new Encoder();
+        encoder.setSerializer(serializer);
+        final ClientHandler clientHandler=new ClientHandler();
+
         bootstrap.handler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
-                ch.pipeline().addLast(new Decoder());
-                ch.pipeline().addLast(new Encoder());
-                ch.pipeline().addLast(new ClientHandler());
+                ch.pipeline().addLast(decoder);
+                ch.pipeline().addLast(encoder);
+                ch.pipeline().addLast(clientHandler);
             }
         });
     }
@@ -88,8 +97,10 @@ public class NettyClient {
         return channel;
     }
 
-    public void close(){
-
+    public void shutdown(){
+        if(workerGroup!=null){
+            workerGroup.shutdownGracefully();
+        }
     }
 
 }
