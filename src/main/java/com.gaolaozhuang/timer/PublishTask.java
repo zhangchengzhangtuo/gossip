@@ -5,6 +5,8 @@ import com.gaolaozhuang.Init;
 import com.gaolaozhuang.monitor.resources.Master;
 import com.gaolaozhuang.netty.model.Node;
 import com.gaolaozhuang.redis.Redis;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.gaolaozhuang.utils.Constants.PublishInfo.*;
 
@@ -12,6 +14,8 @@ import static com.gaolaozhuang.utils.Constants.PublishInfo.*;
  * Created by zhangcheng on 17/7/19.
  */
 public class PublishTask {
+
+    private final static Logger logger= LoggerFactory.getLogger(PublishTask.class);
 
     private Redis redis;
 
@@ -27,6 +31,8 @@ public class PublishTask {
             json.put(MASTER_ID,master.getMasterId());
             json.put(MASTER_NAME,master.getMasterName());
             redis.publish(json.toString());
+
+            logger.debug("publish info:{}",json.toString());
         }
 
     }

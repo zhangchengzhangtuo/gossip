@@ -80,9 +80,9 @@ public class NettyServer {
 
     public void shutdown(){
 
-        if(serverChannelFuture!=null){
-            serverChannelFuture.channel().close();
-        }
+//        if(serverChannelFuture!=null){
+//            serverChannelFuture.channel().close();
+//        }
 
         if(bossGroup!=null){
             bossGroup.shutdownGracefully();
