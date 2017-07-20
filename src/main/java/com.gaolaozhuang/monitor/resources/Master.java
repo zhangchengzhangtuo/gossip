@@ -76,4 +76,8 @@ public class Master {
         return this.masterName;
     }
 
+    public int getMasterId(){
+        return this.masterId;
+    }
+
 }

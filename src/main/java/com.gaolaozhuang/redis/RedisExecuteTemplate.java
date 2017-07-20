@@ -29,6 +29,10 @@ public class RedisExecuteTemplate {
         }
     }
 
+    public void setJedisPool(JedisPool jedisPool) {
+        this.jedisPool = jedisPool;
+    }
+
     public interface ExecuteCallback{
         public Object command(Jedis jedis);
     }

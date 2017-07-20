@@ -34,4 +34,8 @@ public class PingTask {
             channel.writeAndFlush(ping);
         }
     }
+
+    public void setNettyClient(NettyClient nettyClient) {
+        this.nettyClient = nettyClient;
+    }
 }

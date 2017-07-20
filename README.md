@@ -1,0 +1,10 @@
+question list:
+decoder和encoder是要用单例还是直接new，这两者之间的差别是什么？
+在使用ConcurrentHashMap的时候需要加锁吗？或者说使用ConcurrentHashMap有什么注意事项
+在配置netty的时候哪些socket参数需要配置，他们又是什么意思？
+channelHandlercontext.write和channel.write之间有什么区别
+netty编解码的实现技巧
+netty handler的执行顺序
+netty 序列化
+netty client的使用技巧
+

@@ -3,8 +3,11 @@ package com.gaolaozhuang.timer;
 import com.gaolaozhuang.Init;
 import com.gaolaozhuang.monitor.resources.Master;
 import com.gaolaozhuang.monitor.resources.MonitorState;
+import com.gaolaozhuang.netty.client.NettyClient;
 import com.gaolaozhuang.netty.model.Node;
+import com.gaolaozhuang.netty.model.Switch;
 import com.gaolaozhuang.redis.Redis;
+import io.netty.channel.Channel;
 
 import java.util.Date;
 
@@ -14,6 +17,8 @@ import java.util.Date;
 public class MonitorResourceTask {
 
     private Redis redis;
+
+    private NettyClient nettyClient;
 
     public void monitorResource() {
         for (Integer masterId : Init.getMasterIdSet()) {
@@ -34,9 +39,24 @@ public class MonitorResourceTask {
                         otherMonitorState.setMonitorStatus(2);
                         otherMonitorState.setUpdateTime(new Date());
                         otherMonitorState.setIsSwitch(false);
+                        Switch switchRequest=new Switch();
+                        switchRequest.setSrc(currentNode);
+                        switchRequest.setMasterId(master.getMasterId());
+                        switchRequest.setUpdateTime(new Date());
+                        switchRequest.setStatus(monitorMasterStatus);
+                        Channel channel=nettyClient.getChannel(node);
+                        channel.writeAndFlush(switchRequest);
                     }
                 }
             }
         }
+    }
+
+    public void setRedis(Redis redis) {
+        this.redis = redis;
+    }
+
+    public void setNettyClient(NettyClient nettyClient) {
+        this.nettyClient = nettyClient;
     }
 }

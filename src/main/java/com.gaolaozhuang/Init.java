@@ -4,6 +4,7 @@ import com.gaolaozhuang.monitor.resources.Master;
 import com.gaolaozhuang.monitor.resources.MonitorState;
 import com.gaolaozhuang.netty.model.*;
 import com.gaolaozhuang.processor.*;
+import com.gaolaozhuang.redis.Subscriber;
 import com.gaolaozhuang.utils.PropertiesUtil;
 import com.gaolaozhuang.utils.Utils;
 
@@ -38,11 +39,14 @@ public class Init {
 
     private List<String> monitorMasterList;
 
+    private Subscriber subscriber;
+
 
     public void init() throws Exception{
         initCurrentNode();
         initMasterList();
         initMap();
+        initSubscriber();
     }
 
     private void initCurrentNode() throws Exception{
@@ -80,6 +84,12 @@ public class Init {
         processorMap.put(Type.SWOTCH,swotchProcessor);
     }
 
+    private void initSubscriber(){
+        subscriber.setName("subscribe_thread");
+        subscriber.setDaemon(true);
+        subscriber.start();
+    }
+
     public static Node getCurrentNode(){
         return currentNode;
     }
@@ -94,6 +104,25 @@ public class Init {
 
     public static boolean isNodeExist(Node node){
         return nodeStatusMap.containsKey(node);
+    }
+
+    public static boolean isMasterMonitor(int masterId){
+        return masterMap.containsKey(masterId);
+    }
+
+    public void clear(){
+        if(pingProcessor!=null){
+            pingProcessor.close();
+        }
+        if(pongProcessor!=null){
+            pongProcessor.close();
+        }
+        if(switchProcessor!=null){
+            switchProcessor.close();
+        }
+        if(swotchProcessor!=null){
+            swotchProcessor.close();
+        }
     }
 
     public static NodeStatus getNodeStatus(Node node){
@@ -138,6 +167,10 @@ public class Init {
 
     public void setMonitorMasterList(List<String> monitorMasterList) {
         this.monitorMasterList = monitorMasterList;
+    }
+
+    public void setSubscriber(Subscriber subscriber) {
+        this.subscriber = subscriber;
     }
 
 

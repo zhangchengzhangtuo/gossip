@@ -18,4 +18,17 @@ public class Constants {
         public final static byte SWITCH=3;
         public final static byte SWOTCH=4;
     }
+
+    public static class PublishInfo{
+        public final static String NODE_NAME="nodeName";
+        public final static String NODE_ID="nodeId";
+        public final static String NODE_IP="nodeIp";
+        public final static String NODE_PORT="nodePort";
+        public final static String MASTER_ID="masterId";
+        public final static String MASTER_NAME="masterName";
+
+        public final static String CHANNEL_NAME="hello";
+    }
+
+
 }

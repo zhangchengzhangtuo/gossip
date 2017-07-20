@@ -26,6 +26,10 @@ public class Processor {
 
     }
 
+    public void setThreadPoolTaskExecutor(ThreadPoolTaskExecutor threadPoolTaskExecutor) {
+        this.threadPoolTaskExecutor = threadPoolTaskExecutor;
+    }
+
     class Task implements Runnable{
         private CommonBody object;
 
@@ -39,6 +43,12 @@ public class Processor {
         @Override
         public void run() {
             handle(ctx,object);
+        }
+    }
+
+    public void close(){
+        if(threadPoolTaskExecutor!=null) {
+            threadPoolTaskExecutor.shutdown();
         }
     }
 }

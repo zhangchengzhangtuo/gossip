@@ -1,5 +1,6 @@
 package com.gaolaozhuang.redis;
 
+import com.gaolaozhuang.utils.Constants;
 import redis.clients.jedis.Jedis;
 
 /**
@@ -27,5 +28,17 @@ public class Redis {
         });
     }
 
+    public long publish(final String message){
+        return (long)redisExecuteTemplate.excute(new RedisExecuteTemplate.ExecuteCallback() {
+            @Override
+            public Object command(Jedis jedis) {
+                return jedis.publish(Constants.PublishInfo.CHANNEL_NAME,message);
+            }
+        });
+    }
 
+
+    public void setRedisExecuteTemplate(RedisExecuteTemplate redisExecuteTemplate) {
+        this.redisExecuteTemplate = redisExecuteTemplate;
+    }
 }

@@ -22,22 +22,73 @@
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
     </bean>
 
-    <!--<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">-->
-        <!--<property name="driverClassName" value="${jdbc.driverClassName}"/>-->
-        <!--<property name="url" value="${jdbc.url}"/>-->
-        <!--<property name="username" value="${jdbc.username}"/>-->
-        <!--<property name="password" value="${jdbc.password}"/>-->
-    <!--</bean>-->
+    <bean id="monitorMasterList" class="java.util.ArrayList">
 
-    <!--<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">-->
-        <!--<property name="configLocation" value="classpath:mybatis-config.xml"/>-->
-        <!--<property name="dataSource" ref="dataSource"/>-->
-    <!--</bean>-->
+    </bean>
 
-    <!--<bean id="smsModelMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
-        <!--<property name="mapperInterface" value="com.apin.dao.SmsModelMapper" />-->
-        <!--<property name="sqlSessionFactory" ref="sqlSessionFactory" />-->
-    <!--</bean>-->
+    <bean id="threadPoolTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="${threadPool.corePoolSize}"></property>
+        <property name="maxPoolSize" value="${threadPool.maxPoolSize}"></property>
+        <property name="queueCapacity" value="${threadPool.queueCapacity}"></property>
+        <property name="keepAliveSeconds" value="${threadPool.keepAliveSeconds}"></property>
+    </bean>
+
+    <bean id="pingProcessor" class="com.gaolaozhuang.processor.PingProcessor">
+        <property name="threadPoolTaskExecutor" ref="threadPoolTaskExecutor"></property>
+    </bean>
+
+    <bean id="pongProcessor" class="com.gaolaozhuang.processor.PongProcessor">
+        <property name="threadPoolTaskExecutor" ref="threadPoolTaskExecutor"></property>
+    </bean>
+
+    <bean id="switchProcessor" class="com.gaolaozhuang.processor.SwitchProcessor">
+        <property name="threadPoolTaskExecutor" ref="threadPoolTaskExecutor"></property>
+    </bean>
+
+    <bean id="swotchProcessor" class="com.gaolaozhuang.processor.SwotchProcessor">
+        <property name="threadPoolTaskExecutor" ref="threadPoolTaskExecutor"></property>
+    </bean>
+    
+    <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxIdle" value="${redis.maxIdle}"></property>
+        <property name="maxTotal" value="${redis.maxTotal}"></property>
+        <property name="maxWaitMillis" value="${redis.maxWaitMillis}"></property>
+        <property name="minEvictableIdleTimeMillis" value="${redis.minEvictableIdleTimeMillis}"></property>
+    </bean>
+
+    <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+        <constructor-arg name="database" value="${redis.database}"></constructor-arg>
+        <constructor-arg name="host" value="${redis.host}"></constructor-arg>
+        <constructor-arg name="port" value="${redis.port}"></constructor-arg>
+        <constructor-arg name="password" value="${redis.password}"></constructor-arg>
+        <constructor-arg name="poolConfig" ref="poolConfig"></constructor-arg>
+        <constructor-arg name="timeout" value="${redis.timeout}"></constructor-arg>
+    </bean>
+
+    <bean id="subscriber" class="com.gaolaozhuang.redis.Subscriber">
+        <property name="jedisPool" ref="jedisPool"></property>
+    </bean>
+
+    <bean id="redisExecuteTemplate" class="com.gaolaozhuang.redis.RedisExecuteTemplate">
+        <property name="jedisPool" ref="jedisPool"></property>
+    </bean>
+
+    <bean id="redis" class="com.gaolaozhuang.redis.Redis">
+        <property name="redisExecuteTemplate" ref="redisExecuteTemplate"></property>
+    </bean>
+
+    <bean id="init" class="com.gaolaozhuang.Init">
+        <property name="pingProcessor" ref="pingProcessor"></property>
+        <property name="pongProcessor" ref="pongProcessor"></property>
+        <property name="switchProcessor" ref="switchProcessor"></property>
+        <property name="swotchProcessor" ref="swotchProcessor"></property>
+        <property name="monitorMasterList" ref="monitorMasterList"></property>
+        <property name="subscriber" ref="subscriber"></property>
+    </bean>
+
+    <bean id="" class="">
+
+    </bean>
 
 
 
